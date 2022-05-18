@@ -1,0 +1,40 @@
+package finalcodes;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+public class DES {
+    public static void main(String[] args) {
+        try {
+            byte[] plainText = "Practical exam".getBytes();
+            System.out.println("PLAIN TEXT : " + new String(plainText));
+
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+            SecretKey desKey = keyGenerator.generateKey();
+
+            Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+
+            byte[] encryptedText = encryption(plainText, desKey, cipher);
+            System.out.println("ENCRYPTED TEXT : " + new String(encryptedText));
+
+            byte[] decryptedText = decryption(desKey, cipher, encryptedText);
+            System.out.println("DECRYPTED TEXT : " + new String(decryptedText));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static byte[] decryption(SecretKey desKey, Cipher cipher, byte[] encryptedText) throws java.security.GeneralSecurityException {
+        cipher.init(Cipher.DECRYPT_MODE, desKey);
+        byte[] decryptedText = cipher.doFinal(encryptedText);
+        return decryptedText;
+    }
+
+    private static byte[] encryption(byte[] plainText, SecretKey desKey, Cipher cipher) throws java.security.GeneralSecurityException {
+        cipher.init(Cipher.ENCRYPT_MODE, desKey);
+        byte[] encryptedText = cipher.doFinal(plainText);
+        return encryptedText;
+    }
+}
